@@ -1,29 +1,46 @@
 # Laravel SMS Gateway Ghasedak Driver
 
-Ghasedak driver package for [`misaf/laravel-sms-gateway`](https://github.com/misaf/laravel-sms-gateway).
+Ghasedak SMS gateway driver for [`misaf/laravel-sms-gateway`](https://github.com/misaf/laravel-sms-gateway).
 
 ## Installation
 
 ```bash
-composer require misaf/laravel-sms-gateway misaf/laravel-sms-gateway-ghasedak
+composer require misaf/laravel-sms-gateway-ghasedak
 ```
 
-Laravel package discovery registers `Misaf\LaravelSmsGatewayGhasedak\GhasedakSmsGatewayServiceProvider` automatically.
+Laravel package discovery registers the driver service provider automatically.
 
-## Usage
-
-Set the default driver when this provider should be used by default:
+## Configuration
 
 ```env
 SMS_GATEWAY_DRIVER=ghasedak
+SMS_GATEWAY_GHASEDAK_APIKEY=your-api-key
 ```
 
-Then configure the provider credentials in `config/services.php` and use the shared facade:
+```php
+// config/services.php
+'ghasedak' => [
+    'api_key' => env('SMS_GATEWAY_GHASEDAK_APIKEY'),
+],
+```
+
+## Usage
 
 ```php
 use Misaf\LaravelSmsGateway\Facade\SmsGateway;
 
-SmsGateway::driver('ghasedak')->request();
+$response = SmsGateway::driver('ghasedak')->send([
+    'receptor' => '09123456789',
+    'message'  => 'Hello',
+]);
+```
+
+The payload is passed directly to Ghasedak, so use the fields expected by the Ghasedak API.
+
+Use `request()` when you need direct access to Laravel's HTTP client:
+
+```php
+$request = SmsGateway::driver('ghasedak')->request();
 ```
 
 ## Testing
