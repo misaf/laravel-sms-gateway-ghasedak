@@ -23,8 +23,8 @@ final class GhasedakSmsGatewayServiceProvider extends PackageServiceProvider
             $manager->extend('ghasedak', fn(): GhasedakDriver => $app->make(GhasedakDriver::class));
         });
 
-        if ($this->app->bound('sms-gateway')) {
-            $this->app->make('sms-gateway')->extend('ghasedak', fn(): GhasedakDriver => $this->app->make(GhasedakDriver::class));
+        if ($this->app->bound(SmsGatewayManager::class)) {
+            $this->app->make(SmsGatewayManager::class)->extend('ghasedak', fn(Application $app): GhasedakDriver => $app->make(GhasedakDriver::class));
         }
     }
 }
