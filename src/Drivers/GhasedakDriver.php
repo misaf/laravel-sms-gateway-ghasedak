@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Misaf\LaravelSmsGatewayGhasedak\Drivers;
 
+use Illuminate\Http\Client\Response;
 use Misaf\LaravelSmsGateway\SmsGatewayDriver;
 
 final class GhasedakDriver extends SmsGatewayDriver
 {
-    protected function driverName(): string
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function send(array $data): Response
     {
-        return 'ghasedak';
+        return $this->request()->post('sms/send/simple', $data);
     }
 
-    protected function defaultGateway(): string
+    protected function defaultBaseUrl(): string
     {
-        return 'https://api.ghasedak.me/v2/sms/send/simple';
+        return 'https://api.ghasedak.me/v2/';
     }
 
     protected function apiKeyHeader(): string
