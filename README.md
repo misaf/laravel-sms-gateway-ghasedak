@@ -21,8 +21,19 @@ SMS_GATEWAY_GHASEDAK_APIKEY=your-api-key
 // config/services.php
 'ghasedak' => [
     'api_key' => env('SMS_GATEWAY_GHASEDAK_APIKEY'),
+    'base_url' => env('SMS_GATEWAY_GHASEDAK_BASE_URL', 'https://api.ghasedak.me/v2/'),
 ],
 ```
+
+## Driver Behavior
+
+| Option | Value |
+| --- | --- |
+| Driver name | `ghasedak` |
+| Default base URL | `https://api.ghasedak.me/v2/` |
+| `send()` endpoint | `POST sms/send/simple` |
+| Authentication | `apikey` header when `services.ghasedak.api_key` is configured |
+| Payload | Sent directly to Ghasedak |
 
 ## Usage
 
@@ -30,8 +41,8 @@ SMS_GATEWAY_GHASEDAK_APIKEY=your-api-key
 use Misaf\LaravelSmsGateway\Facade\SmsGateway;
 
 $response = SmsGateway::driver('ghasedak')->send([
-    'receptor' => '09123456789',
-    'message'  => 'Hello',
+    'message'  => 'Here is a test message.',
+    'receptor' => '+989119632587',
 ]);
 ```
 
