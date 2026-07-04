@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-sms-gateway-ghasedak` will be documented in this file.
 
+## 3.0.0 - 2026-07-04
+
+<!-- Release notes generated using configuration in .github/release.yml at 7e45d9f06d71cd42728663badf8b89227cd3ee26 -->
+
+## What's Changed
+### Changes
+* Prepare Ghasedak driver for merge by @misaf in https://github.com/misaf/laravel-sms-gateway-ghasedak/pull/5
+
+
+**Full Changelog**: https://github.com/misaf/laravel-sms-gateway-ghasedak/compare/v1.0.0...v3.0.0
+
 ## 1.0.0 - 2026-07-03
 
 <!-- Release notes generated using configuration in .github/release.yml at 92e25bcdbc44cca4044a35b859393f92dbcca392 -->
