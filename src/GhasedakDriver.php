@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Misaf\LaravelSmsGatewayGhasedak\Drivers;
+namespace Misaf\LaravelSmsGatewayGhasedak;
 
 use Illuminate\Http\Client\Response;
 use Misaf\LaravelSmsGateway\SmsGatewayDriver;

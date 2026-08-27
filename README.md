@@ -14,15 +14,24 @@ Laravel package discovery registers the driver service provider automatically.
 
 ```env
 SMS_GATEWAY_DRIVER=ghasedak
-SMS_GATEWAY_GHASEDAK_APIKEY=your-api-key
+SMS_GATEWAY_GHASEDAK_API_KEY=your-api-key
+```
+
+Publish the config file if you want to edit it directly:
+
+```bash
+php artisan vendor:publish --tag=sms-gateway-ghasedak-config
 ```
 
 ```php
-// config/services.php
-'ghasedak' => [
-    'api_key' => env('SMS_GATEWAY_GHASEDAK_APIKEY'),
-    'base_url' => env('SMS_GATEWAY_GHASEDAK_BASE_URL', 'https://api.ghasedak.me/v2/'),
-],
+<?php
+
+declare(strict_types=1);
+
+return [
+    'api_key'  => env('SMS_GATEWAY_GHASEDAK_API_KEY'),
+    'base_url' => env('SMS_GATEWAY_GHASEDAK_BASE_URL'),
+];
 ```
 
 ## Driver Behavior
@@ -32,16 +41,16 @@ SMS_GATEWAY_GHASEDAK_APIKEY=your-api-key
 | Driver name | `ghasedak` |
 | Default base URL | `https://api.ghasedak.me/v2/` |
 | `send()` endpoint | `POST sms/send/simple` |
-| Authentication | `apikey` header when `services.ghasedak.api_key` is configured |
+| Authentication | `apikey` header when `laravel-sms-gateway-ghasedak.api_key` is configured |
 | Payload | Sent directly to Ghasedak |
 
 ## Usage
 
 ```php
-use Misaf\LaravelSmsGateway\Facade\SmsGateway;
+use Misaf\LaravelSmsGateway\Facades\SmsGateway;
 
 $response = SmsGateway::driver('ghasedak')->send([
-    'message'  => 'Here is a test message.',
+    'message' => 'Here is a test message.',
     'receptor' => '+989119632587',
 ]);
 ```
@@ -54,12 +63,13 @@ Use `request()` when you need direct access to Laravel's HTTP client:
 $request = SmsGateway::driver('ghasedak')->request();
 ```
 
-## Testing
+## Development
 
-```bash
-composer test
-composer analyse
-```
+This package is developed in the
+[`misaf/laravel-sms-gateway`](https://github.com/misaf/laravel-sms-gateway)
+monorepo at `src/Drivers/laravel-sms-gateway-ghasedak` and split out here on release. Open issues and
+pull requests against the monorepo; run `composer test` and `composer analyse`
+from its root.
 
 ## License
 

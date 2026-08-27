@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
-use Misaf\LaravelSmsGateway\Facade\SmsGateway;
+use Misaf\LaravelSmsGateway\Facades\SmsGateway;
 
 test('can send simple SMS via Ghasedak driver', function (): void {
-    config()->set('sms_gateway.default', 'ghasedak');
-    config()->set('services.ghasedak.api_key', 'ghasedak-api-key');
+    config()->set('laravel-sms-gateway.default', 'ghasedak');
+    config()->set('laravel-sms-gateway-ghasedak.api_key', 'ghasedak-api-key');
 
     $response = ['result' => ['code' => 200, 'message' => 'success'], 'items' => '2578793735'];
 
@@ -32,7 +32,7 @@ test('can send simple SMS via Ghasedak driver', function (): void {
 });
 
 test('does not send api key header when ghasedak api key is missing', function (): void {
-    config()->set('sms_gateway.default', 'ghasedak');
+    config()->set('laravel-sms-gateway.default', 'ghasedak');
 
     Http::fake([
         'https://api.ghasedak.me/v2/sms/send/simple' => Http::response(['result' => ['code' => 200, 'message' => 'success']], 200),
@@ -49,10 +49,10 @@ test('does not send api key header when ghasedak api key is missing', function (
     });
 });
 
-test('prefers the base URL configured in services over the driver default', function (): void {
-    config()->set('sms_gateway.default', 'ghasedak');
-    config()->set('services.ghasedak.api_key', 'ghasedak-api-key');
-    config()->set('services.ghasedak.base_url', 'https://services-override.example.test/v2/');
+test('prefers the base URL configured in the driver config over the driver default', function (): void {
+    config()->set('laravel-sms-gateway.default', 'ghasedak');
+    config()->set('laravel-sms-gateway-ghasedak.api_key', 'ghasedak-api-key');
+    config()->set('laravel-sms-gateway-ghasedak.base_url', 'https://services-override.example.test/v2/');
 
     Http::fake([
         'https://services-override.example.test/v2/sms/send/simple' => Http::response(['result' => ['code' => 200]], 200),
