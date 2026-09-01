@@ -1,6 +1,6 @@
 {
     "name": "misaf/laravel-sms-gateway-ghasedak",
-    "description": "Ghasedak SMS gateway driver for Laravel.",
+    "description": "Ghasedak SMS gateway driver for Laravel SMS Gateway.",
     "license": "MIT",
     "type": "library",
     "keywords": [

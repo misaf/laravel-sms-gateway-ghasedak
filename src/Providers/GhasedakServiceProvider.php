@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Misaf\LaravelSmsGatewayGhasedak\Providers;
 
 use Composer\InstalledVersions;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Facades\Config;
 use Misaf\LaravelSmsGateway\Contracts\SmsGateway;
 use Misaf\LaravelSmsGateway\SmsGatewayManager;
 use Misaf\LaravelSmsGatewayGhasedak\GhasedakDriver;
@@ -20,16 +20,23 @@ final class GhasedakServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-sms-gateway-ghasedak')
-            ->hasConfigFile('laravel-sms-gateway-ghasedak')
+            ->hasConfigFile()
             ->hasInstallCommand(function (InstallCommand $command): void {
-                $command->askToStarRepoOnGitHub('misaf/laravel-sms-gateway-ghasedak');
+                $command
+                    ->publishConfigFile()
+                    ->askToStarRepoOnGitHub('misaf/laravel-sms-gateway-ghasedak');
             });
     }
 
     public function packageRegistered(): void
     {
         $this->callAfterResolving(SmsGatewayManager::class, function (SmsGatewayManager $manager): void {
-            $manager->extend('ghasedak', fn(Application $app): SmsGateway => $app->make(GhasedakDriver::class));
+            $manager->extend('ghasedak', fn(): SmsGateway => new GhasedakDriver(
+                apiKey: Config::string('sms-gateway-ghasedak.api_key'),
+                baseUrl: Config::string('sms-gateway-ghasedak.base_url'),
+                timeout: Config::integer('sms-gateway.defaults.timeout'),
+                connectTimeout: Config::integer('sms-gateway.defaults.connect_timeout'),
+            ));
         });
     }
 

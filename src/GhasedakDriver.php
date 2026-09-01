@@ -4,11 +4,24 @@ declare(strict_types=1);
 
 namespace Misaf\LaravelSmsGatewayGhasedak;
 
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\Client\Response;
-use Misaf\LaravelSmsGateway\SmsGatewayDriver;
+use Illuminate\Support\Facades\Http;
+use Misaf\LaravelSmsGateway\Contracts\SmsGateway;
+use Misaf\LaravelSmsGateway\Events\SmsSent;
 
-final class GhasedakDriver extends SmsGatewayDriver
+final class GhasedakDriver implements SmsGateway
 {
+    private const string DEFAULT_BASE_URL = 'https://api.ghasedak.me/v2/';
+
+    public function __construct(
+        private readonly string $apiKey = '',
+        private readonly string $baseUrl = '',
+        private readonly int $timeout = 10,
+        private readonly int $connectTimeout = 5,
+    ) {}
+
     /**
      * @param array<string, mixed> $data
      */
@@ -17,13 +30,20 @@ final class GhasedakDriver extends SmsGatewayDriver
         return $this->request()->post('sms/send/simple', $data);
     }
 
-    protected function defaultBaseUrl(): string
+    public function request(): PendingRequest
     {
-        return 'https://api.ghasedak.me/v2/';
-    }
+        $request = Http::baseUrl('' !== $this->baseUrl ? $this->baseUrl : self::DEFAULT_BASE_URL)
+            ->timeout($this->timeout)
+            ->connectTimeout($this->connectTimeout);
 
-    protected function apiKeyHeader(): string
-    {
-        return 'apikey';
+        if ('' !== $this->apiKey) {
+            $request = $request->withHeader('apikey', $this->apiKey);
+        }
+
+        return $request->afterResponse(function (Response $response, Request $request): Response {
+            SmsSent::dispatch('ghasedak', $request, $response);
+
+            return $response;
+        });
     }
 }
